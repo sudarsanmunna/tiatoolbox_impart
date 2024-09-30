@@ -1,0 +1,1 @@
+name: bio-notebookschannels:  - conda-forge  - defaultsdependencies:  - python=3.8  - jupyter  - tensorflow  - opencv  - pandas  - scikit-learn  - numpy  - matplotlib  - nbconvert  
