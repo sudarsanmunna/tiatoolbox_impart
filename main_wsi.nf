@@ -1,5 +1,7 @@
 #!/usr/bin/env nextflow
 
+nextflow.enable.dsl=2
+
 params.wsi = 'input_wsi_folder'  // Define the folder with input WSIs
 params.outdir = 'results'  // Define the output folder
 
@@ -20,17 +22,14 @@ process RunWSIPythonScript {
     output:
     path "${params.outdir}/output_${wsi_file.baseName}.png"
 
+    script:
     """
+    mkdir -p ${params.outdir}
     python 01-wsi-reading.py --input ${wsi_file} --output ${params.outdir}/output_${wsi_file.baseName}.png
     """
 }
 
 workflow {
-
-    // Ensure the output directory exists
-    exec """
-    mkdir -p ${params.outdir}
-    """
 
     // Define the input channel with all WSI files in the input directory
     Channel
