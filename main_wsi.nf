@@ -1,28 +1,46 @@
 #!/usr/bin/env nextflow
 
-// Set up input and output directories as parameters
-params.input_dir = "./input_data"
-params.output_dir = "./output_data"
-params.scripts_dir = "./scripts"
-params.conda_env = "./conda.yml"
+params.wsi = 'input_wsi_folder'  // Define the folder with input WSIs
+params.outdir = 'results'  // Define the output folder
 
-// Workflow definition
-workflow {
-    process_wsi_reading()
+process InstallPythonPackages {
+    """
+    # Install necessary packages for the Python environment
+    apt-get update
+    apt-get -y install libopenjp2-7-dev libopenjp2-tools openslide-tools libpixman-1-dev
+    pip install git+https://github.com/TissueImageAnalytics/tiatoolbox.git@develop
+    """
 }
 
-// Process: WSI Reading
-process process_wsi_reading {
-    conda params.conda_env  // Use Conda environment
+process RunWSIPythonScript {
 
     input:
-    path input_dir, mode: 'copy'
+    path wsi_file  // WSI file to be processed
 
     output:
-    path "${params.output_dir}/wsi_reading_output"
+    path "${params.outdir}/output_${wsi_file.baseName}.png"
 
-    script:
     """
-    python ${params.scripts_dir}/01-wsi-reading.py --input $input_dir --output ${params.output_dir}/wsi_reading_output
+    python 01-wsi-reading.py --input ${wsi_file} --output ${params.outdir}/output_${wsi_file.baseName}.png
     """
+}
+
+workflow {
+
+    // Ensure the output directory exists
+    exec """
+    mkdir -p ${params.outdir}
+    """
+
+    // Define the input channel with all WSI files in the input directory
+    Channel
+        .fromPath("${params.wsi}/*.svs")  // Adjust the extension to match your WSI files
+        .set { wsi_files }
+
+    // Install dependencies
+    InstallPythonPackages()
+
+    // Run the WSI Python analysis script for each WSI file
+    wsi_files
+        | RunWSIPythonScript
 }
