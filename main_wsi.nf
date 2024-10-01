@@ -5,14 +5,14 @@ nextflow.enable.dsl=2
 params.wsi = 'input_wsi_folder'  // Define the folder with input WSIs
 params.outdir = 'results'  // Define the output folder
 
-process InstallPythonPackages {
-    """
-    # Install necessary packages for the Python environment
-    sudo apt-get update
-    sudo apt-get -y install libopenjp2-7-dev libopenjp2-tools openslide-tools libpixman-1-dev
-    pip install git+https://github.com/TissueImageAnalytics/tiatoolbox.git@develop
-    """
-}
+//process InstallPythonPackages {
+//    """
+ //   # Install necessary packages for the Python environment
+//    sudo apt-get update
+//    sudo apt-get -y install libopenjp2-7-dev libopenjp2-tools openslide-tools libpixman-1-dev
+ //   pip install git+https://github.com/TissueImageAnalytics/tiatoolbox.git@develop
+ //   """
+//}
 
 process RunWSIPythonScript {
 
@@ -37,7 +37,7 @@ workflow {
         .set { wsi_files }
 
     // Install dependencies
-    InstallPythonPackages()
+    //InstallPythonPackages()
 
     // Run the WSI Python analysis script for each WSI file
     wsi_files
