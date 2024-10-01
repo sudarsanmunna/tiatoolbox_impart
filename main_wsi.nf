@@ -8,8 +8,8 @@ params.outdir = 'results'  // Define the output folder
 process InstallPythonPackages {
     """
     # Install necessary packages for the Python environment
-    apt-get update
-    apt-get -y install libopenjp2-7-dev libopenjp2-tools openslide-tools libpixman-1-dev
+    sudo apt-get update
+    sudo apt-get -y install libopenjp2-7-dev libopenjp2-tools openslide-tools libpixman-1-dev
     pip install git+https://github.com/TissueImageAnalytics/tiatoolbox.git@develop
     """
 }
