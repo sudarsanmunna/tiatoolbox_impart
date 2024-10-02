@@ -11,7 +11,7 @@ process RunWSIPythonScript {
     path wsi_file  // WSI file to be processed
     
     output:
-    path "output_${wsi_file.baseName}.png" into result_files  // Output file saved in work directory first
+    path "output_${wsi_file.baseName}.png"  // Output file saved in work directory first
 
     script:
     """
@@ -22,12 +22,12 @@ process RunWSIPythonScript {
 process MoveResults {
 
     input:
-    path result_files
+    path result_file
 
     script:
     """
     mkdir -p ${params.outdir}
-    mv ${result_files} ${params.outdir}/
+    mv ${result_file} ${params.outdir}/
     """
 }
 
@@ -43,6 +43,7 @@ workflow {
         | RunWSIPythonScript
 
     // Move results to the final output directory
-    result_files
-        | MoveResults
+    RunWSIPythonScript.out.collect { result_file ->
+        MoveResults(result_file)
+    }
 }
