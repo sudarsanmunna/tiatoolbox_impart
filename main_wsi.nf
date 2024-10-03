@@ -2,48 +2,28 @@
 
 nextflow.enable.dsl=2
 
-params.wsi = '/home/ubuntu/bala/bala/ImpartLabs/tmp/DI_dombox2_0006.svs'  // Path to a single WSI file
-params.outdir = '/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/results'  // Final output directory
+// Define the input file (WSI file) and output folder
+params.wsi_file = "/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/63.svs"
+params.output_dir = "/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart"
 
-process RunWSIPythonScript {
-
-    input:
-    path wsi_file  // WSI file to be processed
-    
-    output:
-    path "output_${wsi_file.baseName}.png"  // Output file saved in work directory first
-
-    script:
-    """
-    python 01-wsi-reading.py --input ${wsi_file} --output output_${wsi_file.baseName}.png
-    """
-}
-
-process MoveResults {
-
-    input:
-    path result_file
-
-    script:
-    """
-    mkdir -p ${params.outdir}
-    mv ${result_file} ${params.outdir}/
-    """
-}
-
+// Workflow definition
 workflow {
+    main:
+        process_wsi(params.wsi_file, params.output_dir)
+}
 
-    // Use a single file as input
-    Channel
-        .fromPath(params.wsi)  // Load the single WSI file
-        .set { wsi_files }
+// Process to handle WSI using tiatoolbox Python script
+process process_wsi {
 
-    // Run the WSI Python analysis script for each WSI file
-    wsi_files
-        | RunWSIPythonScript
+    input:
+    path wsi_file from params.wsi_file
 
-    // Move results to the final output directory
-    RunWSIPythonScript.out.collect { result_file ->
-        MoveResults(result_file)
-    }
+    output:
+    path "${params.output_dir}/wsi_thumbnail_output.png"
+
+    script:
+    """
+    python /home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/wsi.py \
+    --input ${wsi_file} --output ${params.output_dir}/wsi_thumbnail_output.png
+    """
 }
