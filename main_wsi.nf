@@ -15,8 +15,8 @@ workflow {
 process process_wsi {
 
     input:
-    // Corrected way to declare file input using 'from'
-    path wsi_file from file(params.wsi_file)
+    // Corrected input declaration
+    path wsi_file from params.wsi_file
 
     output:
     // Declare output path
