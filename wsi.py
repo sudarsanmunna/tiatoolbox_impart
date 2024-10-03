@@ -10,25 +10,49 @@ Original file is located at
 !apt-get install openslide-tools
 !pip install openslide-python tiatoolbox
 
+import argparse
 from tiatoolbox.wsicore.wsireader import WSIReader
 import matplotlib.pyplot as plt
 
-# Set the path to your WSI image file
-wsi_path = '/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/63.svs'  # Replace with your actual file path
+def main(input_path, output_path):
+    # Load the WSI using WSIReader
+    wsi = WSIReader.open(input_path)
 
-# Load the WSI
-wsi = WSIReader.open(wsi_path)
+    # Read the whole slide image at the lowest resolution level (thumbnail)
+    img = wsi.slide_thumbnail()
 
-# Read the whole slide image at the lowest resolution level (thumbnail)
-img = wsi.slide_thumbnail()
+    # Save the thumbnail image
+    plt.imsave(output_path, img)
+    print(f"Thumbnail saved at: {output_path}")
 
-# Save the thumbnail image
-output_path = '/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/wsi.png'
-plt.imsave(output_path, img)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process Whole Slide Images using TIA Toolbox")
+    parser.add_argument('--input', required=True, help="Path to the WSI input file")
+    parser.add_argument('--output', required=True, help="Path to save the output thumbnail image")
+    
+    args = parser.parse_args()
+    main(args.input, args.output)
 
-# Display the thumbnail
-plt.imshow(img)
-plt.axis('off')
-plt.show()
 
-print(f"Thumbnail saved at: {output_path}")
+# from tiatoolbox.wsicore.wsireader import WSIReader
+# import matplotlib.pyplot as plt
+
+# # Set the path to your WSI image file
+# wsi_path = '/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/63.svs'  # Replace with your actual file path
+
+# # Load the WSI
+# wsi = WSIReader.open(wsi_path)
+
+# # Read the whole slide image at the lowest resolution level (thumbnail)
+# img = wsi.slide_thumbnail()
+
+# # Save the thumbnail image
+# output_path = '/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/wsi.png'
+# plt.imsave(output_path, img)
+
+# # Display the thumbnail
+# plt.imshow(img)
+# plt.axis('off')
+# plt.show()
+
+# print(f"Thumbnail saved at: {output_path}")
