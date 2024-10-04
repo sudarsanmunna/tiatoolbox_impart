@@ -6,14 +6,14 @@ nextflow.enable.dsl=2
 params.wsi_file = "/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/63.svs"
 params.output_dir = "/home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart"
 
+// Create a channel from the wsi_file path
+Channel
+    .fromPath(params.wsi_file)
+    .set { wsi_channel }
+
 // Workflow definition
 workflow {
-    // Create a channel from the wsi_file
-    Channel
-        .fromPath(params.wsi_file)
-        .set { wsi_channel }
-
-    // Pass the file to the process
+    // Call the process and pass the channel
     process_wsi(wsi_channel)
 }
 
