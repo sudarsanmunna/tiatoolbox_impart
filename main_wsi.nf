@@ -21,16 +21,23 @@ workflow {
 process process_wsi {
 
     input:
-    // Declare input path, directly use the path
     path wsi_file
 
     output:
-    // Declare output path
-    path "${params.output_dir}/wsi_thumbnail_output.png"
+    // Output file will be created in the work directory first
+    path 'wsi_thumbnail_output.png'
 
     script:
     """
     python /home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/wsi.py \
-    --input ${wsi_file} --output ${params.output_dir}/wsi_thumbnail_output.png
+    --input ${wsi_file} --output wsi_thumbnail_output.png
+    """
+}
+
+workflow.onComplete {
+    // Move the result to the final output directory
+    exec:
+    """
+    mv work/*/wsi_thumbnail_output.png ${params.output_dir}/wsi_thumbnail_output.png
     """
 }
