@@ -29,7 +29,7 @@ process process_wsi {
 
     script:
     """
-    python /home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/wsi.py \
+    python3 /home/ubuntu/sudarsan/tiatoolbox/tiatoolbox/examples/examples_py/tiatoolbox_impart/wsi.py \
     --input ${wsi_file} --output wsi_thumbnail_output.png
     """
 }
