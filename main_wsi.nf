@@ -21,11 +21,11 @@ workflow {
 process process_wsi {
 
     input:
-    // Correct way to declare file input using 'from' a channel
-    path wsi_file from wsi_channel
+    // Declare input path, directly use the path
+    path wsi_file
 
     output:
-    // Declare output path (it will create the file inside the output directory)
+    // Declare output path
     path "${params.output_dir}/wsi_thumbnail_output.png"
 
     script:
