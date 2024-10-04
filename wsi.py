@@ -7,8 +7,8 @@ Original file is located at
     https://colab.research.google.com/drive/1EL6ZdVZQL1sDmyYsJQzp8PSTG5147RyZ
 """
 
-!sudo apt-get install openslide-tools
-!pip install openslide-python tiatoolbox
+# sudo apt-get install openslide-tools
+# pip install openslide-python tiatoolbox
 
 import argparse
 from tiatoolbox.wsicore.wsireader import WSIReader
