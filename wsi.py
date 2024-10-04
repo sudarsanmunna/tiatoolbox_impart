@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1EL6ZdVZQL1sDmyYsJQzp8PSTG5147RyZ
 """
 
-!apt-get install openslide-tools
+!sudo apt-get install openslide-tools
 !pip install openslide-python tiatoolbox
 
 import argparse
